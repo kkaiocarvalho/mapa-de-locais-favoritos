@@ -1,0 +1,38 @@
+import type { FavoritePlace } from "../types";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Trash } from "lucide-react";
+type Props = {
+  favorites: FavoritePlace[];
+  onSelect: (fav: FavoritePlace) => void;
+  onRemove: (id: string) => void;
+};
+
+export default function FavoritesList({ favorites, onSelect, onRemove }: Props) {
+  if (favorites.length === 0) {
+    return <p className="text-sm text-muted-foreground">Nenhum favorito salvo.</p>;
+  }     
+
+
+  return (
+    <div className="flex flex-col gap-2">
+      {favorites.map((favorite) => (
+        <Card key={favorite.id} className="p-3 flex flex-row justify-between">
+          <Button variant="ghost" className="h-auto flex flex-1 justify-start p-0" onClick={() => onSelect(favorite)}>
+            <div className="text-left">
+              <div className="text-sm font-medium line-clamp-2">{favorite.name}</div>
+              <div className="mt-1 text-xs text-muted-foreground">
+                {favorite.position.lat.toFixed(6)}, {favorite.position.lng.toFixed(6)}
+              </div>
+            </div>
+          </Button>
+          <button className="bg-red-900 flex items-center justify-center p-5 text-white rounded-sm cursor-pointer"
+          type="button" onClick={() => onRemove(favorite.id)}
+          >
+            <Trash/>
+          </button>
+        </Card>
+      ))}
+    </div>
+  );
+}

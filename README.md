@@ -1,73 +1,104 @@
-# React + TypeScript + Vite
+# Mapa de Locais Favoritos
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicacao web para buscar lugares no mapa, selecionar coordenadas e salvar favoritos com persistencia no navegador.
 
-Currently, two official plugins are available:
+## Visao Geral
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+O projeto permite:
 
-## React Compiler
+- Buscar locais por nome (Nominatim / OpenStreetMap)
+- Selecionar ponto no mapa por clique
+- Salvar local favorito com nome personalizado
+- Evitar nomes duplicados na lista de favoritos
+- Remover favoritos salvos
+- Persistir dados no `localStorage`
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+## Tecnologias
 
-## Expanding the ESLint configuration
+- React 19
+- TypeScript
+- Vite
+- React Query (`@tanstack/react-query`)
+- React Leaflet + Leaflet
+- Tailwind CSS
+- shadcn/ui
+- Lucide React
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Estrutura Principal
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```txt
+src/
+  app/
+    components/
+      SearchPlaces.tsx
+      SaveFavoritePlace.tsx
+      FavoritesList.tsx
+      MapView.tsx
+    pages/
+      MapPage.tsx
+    services/
+      nominatim.ts
+      favoritesStorages.ts
+    types.ts
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Como Rodar Localmente
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### 1. Instalar dependencias
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
+
+### 2. Subir ambiente de desenvolvimento
+
+```bash
+npm run dev
+```
+
+### 3. Gerar build
+
+```bash
+npm run build
+```
+
+### 4. Rodar lint
+
+```bash
+npm run lint
+```
+
+## Como Usar
+
+1. Abra a aba **Buscar**.
+2. Pesquise um local.
+3. Clique em um resultado ou diretamente no mapa.
+4. Defina um nome no campo e clique em **Salvar favorito**.
+5. Veja e gerencie os itens na aba **Favoritos**.
+
+## Regras de Favoritos
+
+- Nao permite salvar dois favoritos com o mesmo nome (comparacao por texto normalizado).
+- Se o nome estiver vazio, o app usa:
+  - nome sugerido da busca, ou
+  - `Local favorito` como fallback.
+
+## Persistencia
+
+- Chave utilizada no navegador: `favorite_places`
+- Dados salvos localmente no `localStorage`
+
+## Scripts
+
+- `npm run dev`: inicia o servidor de desenvolvimento
+- `npm run build`: compila TypeScript e gera build de producao
+- `npm run preview`: visualiza build localmente
+- `npm run lint`: executa ESLint
+
+## Melhorias Futuras
+
+- Edicao de favorito (renomear)
+- Confirmacao antes de remover item
+- Filtros e ordenacao por data
+- Testes automatizados para services e componentes
+
