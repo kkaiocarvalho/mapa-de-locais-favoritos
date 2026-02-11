@@ -1,6 +1,5 @@
 import { useState } from "react";
 import type { FavoritePlace, LatLng, PlaceResult } from "../types";
-import { loadFavorites, removeItemFromStorage } from "../services/favoritesStorages";
 
 import MapView from "../components/MapView";
 import SearchPlaces from "../components/SearchPlaces";
@@ -11,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { useFavoritesStore } from "../services/favoriteStore";
 
 const DEFAULT_CENTER: LatLng = { lat: -18.9146, lng: -48.2754 };
 
@@ -18,17 +18,13 @@ export default function MapPage() {
   const [center, setCenter] = useState<LatLng>(DEFAULT_CENTER);
   const [picked, setPicked] = useState<LatLng | null>(null);
   const [suggestedName, setSuggestedName] = useState<string>();
-  const [favorites, setFavorites] = useState<FavoritePlace[]>(() => loadFavorites());
 
-  function refreshFavorites() {
-    const savedFavorites = loadFavorites();
-    setFavorites(savedFavorites);
-  }
+  const favorites = useFavoritesStore((s) => s.favorites);
+  const removeFavorite = useFavoritesStore((s) => s.removeFavorite);
 
   function handleRemoveFavorite(id: string) {
-  removeItemFromStorage(id);
-  refreshFavorites();
-}
+    removeFavorite(id);
+  }
 
   function handleSelectFromSearch(place: PlaceResult) {
     setCenter(place.position);
@@ -82,17 +78,17 @@ export default function MapPage() {
                 )}
               </div>
 
-              <SaveFavoritePlace
-                picked={picked}
-                suggestedName={suggestedName}
-                onSaved={refreshFavorites}
-              />
+              <SaveFavoritePlace picked={picked} suggestedName={suggestedName} />
             </Card>
           </TabsContent>
 
           <TabsContent value="favoritos" className="mt-4">
             <ScrollArea className="h-[calc(100vh-180px)] pr-2">
-              <FavoritesList favorites={favorites} onSelect={handleSelectFavorite}   onRemove={handleRemoveFavorite}/>
+              <FavoritesList
+                favorites={favorites}
+                onSelect={handleSelectFavorite}
+                onRemove={handleRemoveFavorite}
+              />
             </ScrollArea>
           </TabsContent>
         </Tabs>

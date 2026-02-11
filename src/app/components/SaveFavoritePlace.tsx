@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { LatLng } from "../types";
-import { addFavorite, favoriteNameExists, loadFavorites, saveFavorites } from "../services/favoritesStorages";
+import { favoriteNameExists } from "../services/favoritesStorages";
+import { useFavoritesStore } from "../services/favoriteStore";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,30 +9,26 @@ import { Input } from "@/components/ui/input";
 type Props = {
   picked: LatLng | null;
   suggestedName?: string;
-  onSaved: () => void;
 };
 
 const DEFAULT_FAVORITE_NAME = "Local favorito";
 
-export default function SaveFavoritePlace({ picked, suggestedName, onSaved }: Props) {
+export default function SaveFavoritePlace({ picked, suggestedName }: Props) {
   const [name, setName] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const favorites = useFavoritesStore((state) => state.favorites);
+  const addFavorite = useFavoritesStore((state) => state.addFavorite);
 
   function handleSave() {
     if (!picked) return;
 
     const finalName = name.trim() || suggestedName?.trim() || DEFAULT_FAVORITE_NAME;
-    const currentFavorites = loadFavorites();
-
-    if (favoriteNameExists(finalName, currentFavorites)) {
+    if (favoriteNameExists(finalName, favorites)) {
       setErrorMessage("Esse nome ja existe. Escolha outro.");
       return;
     }
 
-    const updatedFavorites = [addFavorite(finalName, picked), ...currentFavorites];
-
-    saveFavorites(updatedFavorites);
-    onSaved();
+    addFavorite(finalName, picked);
     setName("");
     setErrorMessage("");
   }
