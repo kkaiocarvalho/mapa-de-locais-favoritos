@@ -44,14 +44,18 @@ export default function MapPage() {
   }
 
   return (
-    <div className="flex h-full w-full">
-      <aside className="w-[380px] border-r p-4">
-        <div className="mb-4">
+    <div className="flex min-h-dvh w-full flex-col md:h-dvh md:flex-row">
+      <main className="order-1 h-[52dvh] min-h-[300px] w-full md:order-2 md:h-full md:flex-1">
+        <MapView center={center} picked={picked} onPick={handlePickOnMap} />
+      </main>
+
+      <aside className="order-2 w-full border-t p-3 sm:p-4 md:order-1 md:h-full md:w-[380px] md:min-w-[380px] md:border-t-0 md:border-r">
+        <div className="mb-3 sm:mb-4">
           <h1 className="text-lg font-semibold">Mapa de Locais Favoritos</h1>
           <p className="text-sm text-muted-foreground">Busque um local ou clique no mapa e salve.</p>
         </div>
 
-        <Tabs defaultValue="buscar" className="h-[calc(100%-56px)]">
+        <Tabs defaultValue="buscar" className="h-full">
           <TabsList className="w-full">
             <TabsTrigger value="buscar" className="flex-1">
               Buscar
@@ -83,7 +87,7 @@ export default function MapPage() {
           </TabsContent>
 
           <TabsContent value="favoritos" className="mt-4">
-            <ScrollArea className="h-[calc(100vh-180px)] pr-2">
+            <ScrollArea className="h-[32dvh] min-h-[220px] max-h-[320px] pr-2 md:h-[calc(100dvh-180px)] md:max-h-none">
               <FavoritesList
                 favorites={favorites}
                 onSelect={handleSelectFavorite}
@@ -93,10 +97,6 @@ export default function MapPage() {
           </TabsContent>
         </Tabs>
       </aside>
-
-      <main className="flex-1">
-        <MapView center={center} picked={picked} onPick={handlePickOnMap} />
-      </main>
     </div>
   );
 }

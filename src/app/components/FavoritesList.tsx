@@ -11,13 +11,13 @@ type Props = {
 export default function FavoritesList({ favorites, onSelect, onRemove }: Props) {
   if (favorites.length === 0) {
     return <p className="text-sm text-muted-foreground">Nenhum favorito salvo.</p>;
-  }     
+  }
 
 
   return (
     <div className="flex flex-col gap-2">
       {favorites.map((favorite) => (
-        <Card key={favorite.id} className="p-3 flex flex-row justify-between">
+        <Card key={favorite.id} className="flex flex-row items-start justify-between gap-3 p-3">
           <Button variant="ghost" className="h-auto flex flex-1 justify-start p-0" onClick={() => onSelect(favorite)}>
             <div className="text-left">
               <div className="text-sm font-medium line-clamp-2">{favorite.name}</div>
@@ -26,10 +26,12 @@ export default function FavoritesList({ favorites, onSelect, onRemove }: Props) 
               </div>
             </div>
           </Button>
-          <button className="bg-red-900 flex items-center justify-center p-5 text-white rounded-sm cursor-pointer"
-          type="button" onClick={() => onRemove(favorite.id)}
+          <button
+            className="flex h-9 w-9 items-center justify-center rounded-sm bg-red-900 text-white"
+            type="button"
+            onClick={() => onRemove(favorite.id)}
           >
-            <Trash/>
+            <Trash className="h-4 w-4" />
           </button>
         </Card>
       ))}

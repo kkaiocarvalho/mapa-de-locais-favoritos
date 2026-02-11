@@ -1,6 +1,7 @@
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from "react-leaflet";
 import { useEffect } from "react";
 import type { LatLng } from "../types";
+import type { LeafletMouseEvent } from "leaflet";
 
 type Props = {
   center: LatLng;
@@ -10,7 +11,7 @@ type Props = {
 
 function ClickHandler({ onPick }: { onPick: (p: LatLng) => void }) {
   useMapEvents({
-    click(e) {
+    click(e: LeafletMouseEvent) {
       onPick({ lat: e.latlng.lat, lng: e.latlng.lng });
     },
   });
@@ -21,7 +22,7 @@ function Recenter({ center }: { center: LatLng }) {
   const map = useMapEvents({});
   useEffect(() => {
     map.setView([center.lat, center.lng], map.getZoom(), { animate: true });
-  }, [center.lat, center.lng]);
+  }, [center.lat, center.lng, map]);
   return null;
 }
 

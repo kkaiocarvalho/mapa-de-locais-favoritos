@@ -30,10 +30,11 @@ export default function SearchPlaces({ onSelect }: Props) {
 
   return (
     <div>
-      <div className="mb-3 flex gap-2">
+      <div className="mb-3 flex flex-col gap-2 sm:flex-row">
         <Input
           type="text"
           placeholder="Pesquisar local"
+          className="w-full"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={(e) => {
@@ -41,7 +42,11 @@ export default function SearchPlaces({ onSelect }: Props) {
           }}
         />
 
-        <Button className="bg-slate-700" onClick={handleSearch} disabled={!query.trim() || mutation.isPending}>
+        <Button
+          className="w-full bg-slate-700 sm:w-auto"
+          onClick={handleSearch}
+          disabled={!query.trim() || mutation.isPending}
+        >
           {mutation.isPending ? "Buscando..." : "Buscar"}
         </Button>
       </div>
